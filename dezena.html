@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostas - Dezenas</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 2px solid #000;
+        background-color: #fff;
+        text-align: center;
+    }
+
+    button {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #display {
+        height: 100px;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+    input {
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 16px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div id="display">Bem-vindo ao Sistema de Apostas!</div>
+    <!--<input type="text" id="bilhete" value="" readonly style="font-weight: bold;">-->
+    <input type="number" id="dezena" placeholder="Digite a dezena (00 a 99)">
+    <input type="number" id="premio" placeholder="Digite o prêmio (1 a 10)">
+    <input type="number" id="valor" placeholder="Digite o valor da aposta (R$)">
+    <button onclick="realizarAposta()">Realizar Aposta</button>
+    <button id="btnImprimir" style="display: none;" onclick="imprimir()">Imprimir</button>
+</div>
+
+<script>
+    function exibirMensagem(mensagem) {
+        document.getElementById("display").innerText = mensagem;
+    }
+
+    function realizarAposta() {
+        var dezena = document.getElementById("dezena").value;
+        var premio = parseInt(document.getElementById("premio").value);
+        var valor = parseFloat(document.getElementById("valor").value.replace('R$', '').replace(',', '.'));
+
+        // Verificar se a dezena está no formato correto
+        if (!/^\d{2}$/.test(dezena)) {
+            exibirMensagem("Digite uma dezena válida (00 a 99).");
+            return;
+        }
+
+        // Verificar se o prêmio está no intervalo correto
+        if (isNaN(premio) || premio < 1 || premio > 10) {
+            exibirMensagem("Digite um prêmio válido (1 a 10).");
+            return;
+        }
+
+        // Verificar se o valor da aposta está no formato correto
+        if (isNaN(valor) || valor <= 0) {
+            exibirMensagem("Digite um valor de aposta válido (R$).");
+            return;
+        }
+
+        var premioTexto = premio === 1 ? "Do 1º ao 1º" : "Do 1º ao 10º";
+        var mensagem = "Aposta realizada:<br>" +
+                       "Dezena: <strong>" + dezena + "</strong><br>" +
+                       "Prêmio: <strong>" + premioTexto + "</strong><br>" +
+                       "Valor: <strong>R$" + valor.toFixed(2) + "</strong>";
+        exibirMensagem(mensagem);
+
+        // Exibir botão "Imprimir"
+        document.getElementById("btnImprimir").style.display = "inline";
+    }
+
+   function imprimir() {
+    var mensagem = "<span style='font-weight: bold;'>Aposta realizada:</span><br><br>" +
+                   
+                   "Dezena: <strong>" + document.getElementById("dezena").value + "</strong><br>" +
+                   "Prêmio: <strong>" + (parseInt(document.getElementById("premio").value) === 1 ? "Do 1º ao 1º" : "Do 1º ao 10º") + "</strong><br>" +
+                   "Valor: <strong>R$" + parseFloat(document.getElementById("valor").value.replace('R$', '').replace(',', '.')).toFixed(2) + "</strong>";
+				   
+    var winPrint = window.open('', '_blank');
+    winPrint.document.write('<html><head><title>Aposta Realizada</title><style>@media print { @page { size: 2.25in 5.5in; margin: 0; } }</style></head><body>' + mensagem + '</body></html>');
+    winPrint.document.close();
+    winPrint.print();
+}
+
+</script>
+</body>
+</html>
